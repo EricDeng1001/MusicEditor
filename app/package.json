@@ -1,0 +1,18 @@
+{
+  "name": "projectName",
+  "productName": "productName",
+  "version": "1.0.0",
+  "description": "developed by Eric Deng",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Eric Deng",
+    "email": "gantinus@gmail.com",
+    "url": "https://github.com/GitAntinus"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "npm run electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}

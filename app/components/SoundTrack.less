@@ -1,0 +1,48 @@
+@import 'colors';
+
+@canvasWidth: 800px;
+@canvasHeight: 320px;
+@infoBarHeight: 30px;
+
+.root {
+  position: relative;
+  width: @canvasWidth;
+  height: @canvasHeight + @infoBarHeight;
+
+  .filename {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .process {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.cursor {
+  position: absolute;
+  height: @canvasHeight;
+  top: 0;
+  width: 0;
+  background-color: @cyan300;
+
+  &:hover {
+    cursor: col-resize;
+  }
+}
+
+.processCursor {
+  position: absolute;
+  height: @canvasHeight;
+  top: 0;
+  width: 0;
+  background-color: @blue400;
+  transition: left 100ms linear;
+
+  &:hover {
+    cursor: col-resize;
+  }
+}

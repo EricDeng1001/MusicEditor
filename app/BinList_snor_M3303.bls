@@ -1,0 +1,44 @@
+[SYSTEM]
+VERSION	= 2
+NUM_OF_FILES = 17
+
+FILENAME0 = "xboot.bin"
+ADDRESS0 = "L0" 
+FILENAME1 = "xos.bin"
+ADDRESS1 = "L16"
+FILENAME2 = "appdesc.bin"
+ADDRESS2 = "L32"
+FILENAME3 = "xmpl.bin"
+ADDRESS3 = "L40"
+FILENAME4 = "xapi.bin"
+ADDRESS4 = "L248"
+FILENAME5 = "xthd.bin"
+ADDRESS5 = "L304"
+FILENAME6 = "xlrc.bin"
+ADDRESS6 = "L320"
+FILENAME7 = "xsddrv.bin"
+ADDRESS7 = "L352"
+FILENAME8 = "effect.bin"
+ADDRESS8 = "L360"
+FILENAME9 = "xlcm.bin"
+ADDRESS9 = "L376"
+FILENAME10 = "xkey.bin"
+ADDRESS10 = "L432"
+FILENAME11 = "xir.bin"
+ADDRESS11 = "L440"
+FILENAME12 = "app.bin"
+ADDRESS12 = "L472"
+FILENAME13 = "setting_terry_st.bin"
+ADDRESS13 = "L536"
+FILENAME14 = "setting_terry_st.bin"
+ADDRESS14 = "L544"
+FILENAME15 = "output.bin"
+ADDRESS15 = "L552"
+FILENAME16 = "sound.bin"
+ADDRESS16 = "L568"
+
+
+
+
+
+

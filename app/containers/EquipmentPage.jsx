@@ -14,12 +14,29 @@ class Page extends React.Component {
     
     if (!tf) {
       return (
-        <div>没有声卡设备，请插入后重启软件</div>
+        <div>
+          <Button
+            onClick={
+              () => fileManager.updateCard()
+            }
+          >
+            升级声卡
+          </Button>
+          <div>没有声卡设备，请插入后重启软件</div>
+        </div>
       );
     }
     
     return (
       <div>
+        <Button
+          onClick={
+            () => fileManager.updateCard()
+          }
+        >
+          升级声卡
+        </Button>
+        <div>
         {
           fileManager.readMusicFromTFCard().map(
             mp3 => (
@@ -36,6 +53,7 @@ class Page extends React.Component {
             )
           )
         }
+        </div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import exe from '../update.exe';
 const fileManager = {
   saveAsMp3(name, wav) {
@@ -38,6 +38,14 @@ const fileManager = {
       throw "没有声卡设备";
     }
     fs.unlinkSync(path.resolve(drive, `./${name}.mp3`));
+    const names = fs.readdirSync(drive).filter(file => file !== '_list.txt').filter(file =>
+      file.slice(file.lastIndexOf('.'), file.length) === '.mp3'
+    ).map(file => file.slice(0, file.lastIndexOf('.')));
+    fs.writeFileSync(
+      path.resolve(drive, '_list.txt'),
+      names.map((name, index) => `${index + 1},0,${name},C:\\\\${index + 1}.mp3\r\n`).join(''),
+      { flag: 'w+' }
+    );
   },
   
   uploadToTFCard(name) {
@@ -49,26 +57,12 @@ const fileManager = {
       path.resolve(this.musicDir, `./${name}.mp3`),
       path.resolve(drive, `./${name}.mp3`)
     );
-    var index;
-    const buffer = fs.readFileSync(
-      path.resolve(drive, '_list.txt')
-    );
-    const strings = buffer.toString();
-    const names = strings.split('\r\n');
-    if (!names.length) {
-      index = '001';
-    } else {
-      index = parseInt(names[names.length - 1].split(',')[0]) + 1;
-      if (index < 10) {
-        index = '00' + index;
-      } else if (index < 100) {
-        index = '0' + index;
-      }
-    }
-    names.push(`${index},0,${name},C:\\\\${index}.mp3\r\n`);
+    const names = fs.readdirSync(drive).filter(file => file !== '_list.txt').filter(file =>
+      file.slice(file.lastIndexOf('.'), file.length) === '.mp3'
+    ).map(file => file.slice(0, file.lastIndexOf('.')));
     fs.writeFileSync(
       path.resolve(drive, '_list.txt'),
-      names.join('\r\n'),
+      names.map((name, index) => `${index + 1},0,${name},C:\\\\${index + 1}.mp3\r\n`).join(''),
       { flag: 'w+' }
     );
   },
@@ -83,7 +77,7 @@ const fileManager = {
   },
   
   _listDrives() {
-    return execSync('wmic logicaldisk get name').toString().split('\r\n').slice(1).map(x=>x.trim()).filter(x=>x);
+    return execSync('wmic logicaldisk get name').toString().split('\r\n').slice(1).map(x=>x.trim()+'\\').filter(x=>x);
   },
   
   getTFCard() {
@@ -96,8 +90,9 @@ const fileManager = {
   },
   
   updateCard() {
-    remote.showOpenDialog({
-      properties: ['openDirectory']
+    remote.dialog.showOpenDialog({
+      properties: ['openFile'],
+      title: "选择output.bin"
     }, files => {
       if (!files) {
         return;
@@ -106,10 +101,13 @@ const fileManager = {
         files[0],
         path.resolve('./output.bin')
       );
-      execSync(exe);
+      console.log(exe);
+      execFileSync(exe);
       alert('升级成功！');
     });
   }
 };
+
+window.fileManager = fileManager;
 
 export default fileManager;

@@ -10,7 +10,6 @@
   "plugins": ["add-module-exports"],
   "env": {
     "production": {
-      "presets": ["react-optimize"],
       "plugins": ["dev-expression"]
     },
     "development": {

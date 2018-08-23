@@ -10,13 +10,13 @@ import waitForms from 'utils/waitForms';
 import toWav from 'audiobuffer-to-wav';
 
 class AudioProcessor {
-  constructor(_audioCtx) {
-    if (!_audioCtx) {
+  constructor(audioCtx) {
+    if (!audioCtx) {
       throw "Fatal Error: Could not instance AudioProcessor without an audioCtx";
     }
-    this._audioCtx = _audioCtx;
-    this._gainNode = _audioCtx.createGain();
-    this.onStart = this.onEnd = this.onLoad = () => {};
+    this._audioCtx = audioCtx;
+    this._gainNode = audioCtx.createGain();
+    this.onStart = this.onStop = this.onLoad = () => {};
   }
   
   destructor() {
@@ -80,15 +80,23 @@ class AudioProcessor {
     return percents * this._bufferSource.buffer.duration * 10;
   }
   
-  setLoop = (
+  setLoopStart = async (
     start = this._bufferSource.loopStart * 1000,
-    end = this._bufferSource.loopEnd * 1000
   ) => {
     this._bufferSource.loopStart = start / 1000;
+    const played = this.getPlayedOffset();
+    if (played < start) {
+      await this.jumpTo(start);
+    }
+  }
+  
+  setLoopEnd = async (
+    end = this._bufferSource.loopEnd * 1000
+  ) => {
     this._bufferSource.loopEnd = end / 1000;
     const played = this.getPlayedOffset();
-    if (played < start || played > end) {
-      this.jumpTo(start);
+    if (played > end) {
+      await this.jumpTo(start);
     }
   }
   

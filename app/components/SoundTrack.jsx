@@ -9,7 +9,7 @@ type Props = {
   audioSrc: string
 }
 
-export const canvasWidth = 800;
+export const canvasWidth = 1340;
 export const canvasHeight = 320;
 export const cursorWidth = 3;
 export const widthPercents = cursorWidth / canvasWidth * 100;
@@ -30,7 +30,10 @@ class SoundTrack extends React.Component<Props> {
     this.audioProcessor = new AudioProcessor(window.audioCtx);
     this.audioProcessor.onStart = this.startTicking;
     this.audioProcessor.onStop = this.stopTicking;
-    this.audioProcessor.onLoad = this.drawBuffer;
+    this.audioProcessor.onLoad = buffer => {
+      this.drawBuffer(buffer);
+      this.audioProcessor.togglePlay();
+    };
     this.audioProcessor.loadSource(props.audioSrc);
   }
   
@@ -43,13 +46,13 @@ class SoundTrack extends React.Component<Props> {
       drag,
       endDrag,
       getCanvas,
-      filename,
       duration,
       state: {
         played
       }
     } = this;
-
+    
+    
     return (
       <div className={styles.root}>
         <div draggable
@@ -90,17 +93,8 @@ class SoundTrack extends React.Component<Props> {
           width={canvasWidth}
           height={canvasHeight}
         />
-        <div className={styles.filename}>{filename}</div>
         <div className={styles.process}>{(played / 1000).toFixed(1)}s</div>
       </div>
-    );
-  }
-
-  componentWillMount() {
-    const { audioSrc } = this.props;
-    this.filename = audioSrc.slice(
-      audioSrc.lastIndexOf('\\') + 1,
-      audioSrc.lastIndexOf('.')
     );
   }
 
@@ -154,7 +148,7 @@ class SoundTrack extends React.Component<Props> {
     const framePerSecond = drawRate * buffer.sampleRate;
     // 1000 / drawTime * framePerPx === framePerSecond
     var drawTime = parseInt(1000 / framePerSecond * framePerPx);
-    drawTime = Math.min(drawTime, 16); // 至少60 fps
+    drawTime = Math.min(drawTime, 8); // 至少120 fps
     for (let i = 0; i < canvasWidth; i++) {
       const sampleFrame = parseInt(framePerPx * i);
       let mixed = (leftChannel[sampleFrame] + rightChannel[sampleFrame]) / 2;
@@ -259,7 +253,7 @@ class SoundTrack extends React.Component<Props> {
     this.cursor[index].style.left = `${percents}%`;
   }
 
-  endDrag = index => async ev => {
+  endDrag = index => ev => {
     const {
       cursor,
       dragger
@@ -268,13 +262,14 @@ class SoundTrack extends React.Component<Props> {
     const time = this.audioProcessor.getTimeFormPercents(percents);
     switch (index) {
       case 0:
-        this.audioProcessor.setLoop(time, undefined);
+        this.audioProcessor.jumpTo(time).then(() =>
+        this.audioProcessor.setLoopStart(time));
         break;
       case 1:
-        this.audioProcessor.setLoop(undefined, time);
+        this.audioProcessor.setLoopEnd(time);
         break;
       case 2:
-        await this.audioProcessor.jumpTo(time);
+        this.audioProcessor.jumpTo(time);
         break;
     }
     dragger[index].style.opacity = 1;

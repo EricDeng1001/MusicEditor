@@ -1,5 +1,6 @@
 import React from 'react';
 import os from 'os';
+import { remote } from 'electron';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import Root from './containers/Root';
@@ -33,6 +34,10 @@ if (module.hot) {
     );
   });
 }
+
+window.alert = msg => remote.dialog.showMessageBox({
+  message: msg
+});
 
 window.audioCtx = new AudioContext();
 //setTimeout(() => {

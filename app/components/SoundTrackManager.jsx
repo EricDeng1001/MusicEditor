@@ -80,13 +80,6 @@ class SoundTrackManager extends React.Component<Props> {
           <Button
             variant='contained'
             color='primary'
-            onClick={handleTogglePlay}
-          >
-            播放/暂停
-          </Button>
-          <Button
-            variant='contained'
-            color='primary'
             onClick={handleClip}
           >
             裁剪选中片段

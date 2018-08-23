@@ -43,6 +43,7 @@ class RecordTrack extends React.Component<Props> {
         </div>
       )
     }
+    
     return (
       <div>
         <canvas

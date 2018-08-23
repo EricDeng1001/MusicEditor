@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { connect } from 'react-redux';
+import path from 'path';
+import AudioProcessor from 'service/AudioProcessor';
 import fileManager from 'service/fileManager';
 import Button from '@material-ui/core/Button';
 import ClipDestination from 'components/ClipDestination';
@@ -8,7 +9,7 @@ type Props = {};
 
 class Page extends React.Component {
   props: Props;
-
+  audioProcessors = {};
   render() {
     return (
       <div>
@@ -39,6 +40,13 @@ class Page extends React.Component {
                   >
                     删除
                   </Button>
+                  <Button
+                    onClick={
+                      () => this.toggleMusic(mp3)
+                    }
+                  >
+                    试听/暂停
+                  </Button>
                 </div>
               )
             )
@@ -46,6 +54,20 @@ class Page extends React.Component {
         </div>
       </div>
     );
+  }
+  
+  toggleMusic(filename) {
+    const fullPath = path.resolve(
+      fileManager.musicDir,
+      `./${filename}.mp3`
+    );
+    if (!this.audioProcessors[filename]) {
+      let tmp = this.audioProcessors[filename] = new AudioProcessor(window.audioCtx);
+      tmp.onLoad = tmp.togglePlay;
+      tmp.loadSource(fullPath);
+    } else {
+      this.audioProcessors[filename].togglePlay();
+    }
   }
 }
 

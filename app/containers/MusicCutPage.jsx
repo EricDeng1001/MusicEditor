@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
-import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 import fileManager from 'service/fileManager';
 import SoundTrackManager from 'components/SoundTrackManager';
 import GetClipNameDialog from 'components/GetClipNameDialog';
+import buttonMerge from 'images/btnMerge.png';
 import styles from './MusicCutPage.less';
 
 type Props = {};
@@ -21,13 +20,11 @@ class Page extends React.Component {
         <SoundTrackManager
           ref={ref => this.second = ref}
         />
-        <Button
+        <img
+          src={buttonMerge}
+          className='button'
           onClick={this.handleMerge}
-          variant='contained'
-          color='primary'
-        >
-          合成
-        </Button>
+        />
         <GetClipNameDialog
           ref={ref => this.dialog = ref}
           action={this.handleSaveClip}
@@ -41,13 +38,14 @@ class Page extends React.Component {
       this.clip = this.first.soundTrack.audioProcessor.mergeAnotherBufferAtStart(
         this.second.soundTrack.audioProcessor.getAudioBuffer()
       );
+      this.dialog.open();
     } catch (e) {
-      alert(e);
+      alert('剪切缓冲数不足2，无法合成，请先进行剪切');
     }
   }
   
   handleSaveClip = name => {
-    fileManager.saveAsMp3(name, this.newClip);
+    fileManager.saveAsMp3(name, this.clip);
   }
 }
 

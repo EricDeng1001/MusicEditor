@@ -138,7 +138,7 @@ class AudioProcessor {
     return toWav(newClip);
   }
   
-  mergeAnotherBufferAtStart = audiobuffer => {
+  mergeAnotherBufferAtStart = audioBuffer => {
     const {
       _audioCtx,
       _bufferSource: {
@@ -158,7 +158,7 @@ class AudioProcessor {
       }
     }
     
-    return newClip;
+    return toWav(newClip);
   }
   
   _play = () => {

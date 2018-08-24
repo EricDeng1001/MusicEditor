@@ -7,7 +7,7 @@ import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import fileManager from 'service/fileManager';
 import AudioProcessor from 'service/AudioProcessor';
-import greetings from './greetings.mp3';
+// import greetings from './greetings.mp3';
 import './app.global.less';
 
 const homedir = os.homedir();
@@ -36,7 +36,8 @@ if (module.hot) {
 }
 
 window.alert = msg => remote.dialog.showMessageBox({
-  message: msg
+  title: '唱吧编辑器',
+  message: msg.toString()
 });
 
 window.audioCtx = new AudioContext();

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
-import { execSync, execFileSync } from 'child_process';
+import { execSync, execFile } from 'child_process';
 import exe from '../update.exe';
 const fileManager = {
   saveAsMp3(name, wav) {
@@ -67,6 +67,17 @@ const fileManager = {
     );
   },
   
+  downloadFromTFCard(name) {
+    const drive = this.getTFCard();
+    if (!drive) {
+      throw '没有声卡设备';
+    }
+    fs.copyFileSync(
+      path.resolve(drive, `./${name}.mp3`),
+      path.resolve(this.musicDir, `./${name}.mp3`)
+    );
+  },
+  
   _isTFCard(drive) {
     for (let file of fs.readdirSync(drive)) {
       if (file === '_list.txt') {
@@ -101,8 +112,7 @@ const fileManager = {
         files[0],
         path.resolve('./output.bin')
       );
-      console.log(exe);
-      execFileSync(exe);
+      execFile(exe, err => console.log(err));
       alert('升级成功！');
     });
   }

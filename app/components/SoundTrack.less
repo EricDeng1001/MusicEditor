@@ -1,7 +1,7 @@
 @import 'colors';
 
-@canvasWidth: 1340px;
-@canvasHeight: 320px;
+@canvasWidth: 1322px;
+@canvasHeight: 300px;
 @infoBarHeight: 30px;
 
 .root {
@@ -24,10 +24,9 @@
 
 .cursor {
   position: absolute;
-  height: @canvasHeight;
-  top: 0;
-  width: 0;
-  background-color: @cyan300;
+  width: 26px;
+  height: 26px;
+  bottom: 0;
 
   &:hover {
     cursor: col-resize;
@@ -45,4 +44,14 @@
   &:hover {
     cursor: col-resize;
   }
+}
+
+.sliderIndicator {
+  position: absolute;
+  height: 26px;
+  background-color: rgb(237, 56, 81);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

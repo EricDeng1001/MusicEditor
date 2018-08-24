@@ -1,72 +1,90 @@
 // @flow
 import * as React from 'react';
 import path from 'path';
-import AudioProcessor from 'service/AudioProcessor';
 import fileManager from 'service/fileManager';
 import Button from '@material-ui/core/Button';
 import ClipDestination from 'components/ClipDestination';
+import File from 'components/File';
+import selectAll from 'images/selectAll.png';
+import notSelectAll from 'images/notSelectAll.png';
+import uploadSelect from 'images/uploadSelect.png';
+
 type Props = {};
 
 class Page extends React.Component {
   props: Props;
-  audioProcessors = {};
+  state = {
+    all: false,
+    selected: {}
+  }
   render() {
     return (
-      <div>
-        <ClipDestination
-          onChange={() => this.forceUpdate()}
-        />
-        <div>
+      <div style={{ width: '100%', padding: '66px 66px 66px 66px'}}>
+        <div style={{
+          position: 'fixed',
+          top: '64px',
+          left: '316px'
+        }}>
+          <ClipDestination
+            onChange={() => this.forceUpdate()}
+          />
+        </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '25% 25% 25% 25%',
+          height: '800px', overflow: 'scroll',
+          marginTop: '80px',
+          marginBottom: '20px'
+        }}>
           {
             fileManager.readMusicFromMusicDir().map(
               mp3 => (
-                <div key={mp3}>
-                  <div>{mp3}</div>
-                  <Button
-                    onClick={() => {
-                      try {
-                        fileManager.uploadToTFCard(mp3)
-                      } catch (e) {
-                        alert(e);
-                      }
-                    }}
-                  >
-                    上传到声卡
-                  </Button>
-                  <Button
-                    onClick={
-                      () => fileManager.deleteFromMusicDir(mp3) || this.forceUpdate()
-                    }
-                  >
-                    删除
-                  </Button>
-                  <Button
-                    onClick={
-                      () => this.toggleMusic(mp3)
-                    }
-                  >
-                    试听/暂停
-                  </Button>
-                </div>
+                <File isLocal
+                  key={mp3}
+                  isSelected={this.state.selected[mp3] || false}
+                  filename={mp3}
+                  onDelete={() => this.forceUpdate()}
+                  onSelect={() => this.setState(prev => ({...prev, selected: {...prev.selected, [mp3]: !prev.selected[mp3]}}))}
+                />
               )
             )
           }
+        </div>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row'
+        }}>
+          <div>
+            <img
+              className='button'
+              src={this.state.all ? selectAll: notSelectAll}
+              onClick={this.selectAll}
+            />
+            <span style={{ color: 'white' }}>全选</span>
+          </div>
+          <img className='button'
+            src={uploadSelect}
+            onClick={this.uploadSelect}
+          />
         </div>
       </div>
     );
   }
   
-  toggleMusic(filename) {
-    const fullPath = path.resolve(
-      fileManager.musicDir,
-      `./${filename}.mp3`
-    );
-    if (!this.audioProcessors[filename]) {
-      let tmp = this.audioProcessors[filename] = new AudioProcessor(window.audioCtx);
-      tmp.onLoad = tmp.togglePlay;
-      tmp.loadSource(fullPath);
-    } else {
-      this.audioProcessors[filename].togglePlay();
+  selectAll = () => {
+    this.setState(prev => ({
+      all: !prev.all
+    }), () =>
+    fileManager.readMusicFromMusicDir().forEach(
+      mp3 => this.setState(prev => ({...prev, selected: {...prev.selected, [mp3]: prev.all }}))
+    ));
+  }
+  
+  uploadSelect = () => {
+    for (let [k,v] of this.state.selected) {
+      if (v) {
+        fileManager.uploadToTFCard(k);
+      }
     }
   }
 }

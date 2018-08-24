@@ -1,5 +1,5 @@
 // @flow
-import Recorder from 'recorderjs';
+import Recorder from 'utils/recorder';
 
 class MicrophoneProcessor {
   constructor(audioCtx) {
@@ -17,8 +17,10 @@ class MicrophoneProcessor {
   }
   
   stop() {
-    this.recorder.stop();
-    this.source.disconnect();
+    if (this.recorder) {
+      this.recorder.stop();
+      this.source.disconnect();
+    }
   }
   
   getURL() {

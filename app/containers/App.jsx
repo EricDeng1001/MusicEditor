@@ -3,14 +3,18 @@ import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import btn1_1 from 'images/btn1-1.png';
+import btn1_2 from 'images/btn1-2.png';
+import btn2_1 from 'images/btn2-1.png';
+import btn2_2 from 'images/btn2-2.png';
+import btn3_1 from 'images/btn3-1.png';
+import btn3_2 from 'images/btn3-2.png';
+import btn4_1 from 'images/btn4-1.png';
+import btn4_2 from 'images/btn4-2.png';
 import styles from './App.less';
 
 type Props = {
@@ -20,19 +24,27 @@ type Props = {
 
 const lists = [
   {
-    text: '音乐剪切',
+    name: '音乐剪切',
+    at: btn1_2,
+    notAt: btn1_1,
     url: '/'
   },
   {
-    text: '音乐录制',
+    name: '音乐录制',
+    at: btn2_2,
+    notAt: btn2_1,
     url: '/record'
   },
   {
-    text: '我的特效',
+    name: '我的特效',
+    at: btn3_2,
+    notAt: btn3_1,
     url: '/soundEffect'
   },
   {
-    text: '设备管理',
+    name: '设备管理',
+    at: btn4_2,
+    notAt: btn4_1,
     url: '/equipment'
   }
 ];
@@ -62,36 +74,28 @@ class App extends React.Component<Props> {
             paper: styles.navigator
           }}
         >
+          <img
+            width="250px"
+            height="178px"
+            alt="logo"
+          />
           <List component='nav'>
             {
               lists.map(list => (
-                <ListItem
+                <img
                   key={list.url}
-                  button
-                  classes={{
-                    root: pathname === list.url ? styles.at : ''
-                  }}
                   onClick={goTo(list.url)}
-                >
-                  <ListItemIcon>
-                    <FontAwesomeIcon icon={faCoffee} />
-                  </ListItemIcon>
-                  <ListItemText primary={list.text} />
-                </ListItem>
+                  src={pathname === list.url ? list.at : list.notAt}
+                  width="250px"
+                  height="66px"
+                  className={styles.item}
+                />
               ))
             }
           </List>
         </Drawer>
         <div className={styles.appContentContainer}>
-          <Card
-            classes={{
-              root: styles.appContent
-            }}
-          >
-            <CardContent>
-              {this.props.children}
-            </CardContent>
-          </Card>
+          {this.props.children}
         </div>
       </div>
     );

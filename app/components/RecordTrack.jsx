@@ -1,23 +1,25 @@
 // @flow
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import fileManager from 'service/fileManager';
 import MicrophoneProcessor from 'service/MicrophoneProcessor';
 import SoundTrackManager from './SoundTrackManager';
+import startRecord from 'images/startRecord.png';
+import icon from 'images/ico-1.png';
+import emptyTrack from 'images/emptyTrack.png';
 import { canvasWidth, canvasHeight } from './SoundTrack';
+import styles from './SoundTrackManager.less';
 
 type Props = {};
 
 class RecordTrack extends React.Component<Props> {
   props: Props;
   state = {
-    record: null
+    record: null,
+    start: null,
   }
   async componentDidMount() {
     try {
       this.microphoneProcessor = new MicrophoneProcessor(window.audioCtx);
-      await this.microphoneProcessor.start();
-      this.draw();
     } catch (e) {
       this.e = e;
       this.forceUpdate();
@@ -37,31 +39,111 @@ class RecordTrack extends React.Component<Props> {
       return (
         <div>
           <SoundTrackManager
+            ref={ref => this.audioProcessor = ref.audioProcessor}
             audioSrc={this.state.record}
-            onClear={() => this.setState({ record: null })}
+            onClear={() => this.setState({ record: null, start: false })}
           />
         </div>
       )
     }
     
+    if (!this.state.start) {
+      return (
+        <div className={styles.root} style={{
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <section>
+            <img
+              src={emptyTrack}
+              width={canvasWidth}
+              height={canvasHeight}
+              style={{
+                marginBottom: '22px',
+              }}
+            />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+              }}
+            >
+              <img
+                src={startRecord}
+                onClick={() => {
+                  this.setState({ start: true }, () => this.draw());
+                  this.microphoneProcessor.start();
+                }}
+                className="button"
+              />
+              <span
+                style={{
+                  size: '22pt',
+                  color: 'rgb(237, 56, 81)'
+                }}
+              >
+                开始录音
+              </span>
+            </div>
+          </section>
+          <div
+            style={{
+              width: canvasWidth,
+              borderTop: 'solid 1px lightgrey',
+              paddingTop: '5px'
+            }}
+          >
+            <img src={icon} />
+            <span style={{ fontSize: '22px', color: 'rgb(117, 121, 145)'}}>
+              点击右侧“+”，添加一条本地音乐进行剪切
+            </span>
+          </div>
+        </div>
+      )
+    }
+    
     return (
-      <div>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row'
+      }}>
         <canvas
           ref={ref => this.canvas = ref}
           width={canvasWidth}
           height={canvasHeight}
         />
-        <Button
-          onClick={this.handleSaveRecord}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column'
+          }}
         >
-          保存录音
-        </Button>
+          <img
+            src={startRecord}
+            onClick={this.handleSaveRecord}
+            className="button"
+          />
+          <span
+            style={{
+              size: '22pt',
+              color: 'rgb(237, 56, 81)'
+            }}
+          >
+            结束录音
+          </span>
+        </div>
       </div>
     )
   }
   
   componentWillUnmount() {
     cancelAnimationFrame(this.drawVisual);
+    this.microphoneProcessor.stop();
+    delete this.microphoneProcessor;
   }
   
   handleSaveRecord = async () => {

@@ -3,27 +3,31 @@ import * as React from 'react';
 import AudioProcessor from 'service/AudioProcessor';
 import fileManager from 'service/fileManager';
 import waitForms from 'utils/waitForms';
+import sliderRight from 'images/sliderRight.png';
+import sliderLeft from 'images/sliderLeft.png';
 import styles from './SoundTrack.less';
 
 type Props = {
   audioSrc: string
 }
 
-export const canvasWidth = 1340;
-export const canvasHeight = 320;
-export const cursorWidth = 3;
+export const canvasWidth = 1322;
+export const canvasHeight = 300;
+export const cursorWidth = 26;
 export const widthPercents = cursorWidth / canvasWidth * 100;
 
 class SoundTrack extends React.Component<Props> {
   props: Props;
   state = {
-    played: -1 // 仅用作ui展示，不能作为计算参考
+    played: -1,
+    selected: -1// 仅用作ui展示，不能作为计算参考
   };
   dragger = [];
   cursor = [];
   getCanvas = ref => this.canvas = ref;
   getDragger = index => ref => this.dragger[index] = ref;
   getCursor = index => ref => this.cursor[index] = ref;
+  getSliderIndicator = ref => this.sliderIndicator = ref;
   
   constructor(props) {
     super(props);
@@ -33,6 +37,9 @@ class SoundTrack extends React.Component<Props> {
     this.audioProcessor.onLoad = buffer => {
       this.drawBuffer(buffer);
       this.audioProcessor.togglePlay();
+      this.setState({
+        selected: this.audioProcessor.getAudioBuffer().duration
+      })
     };
     this.audioProcessor.loadSource(props.audioSrc);
   }
@@ -48,23 +55,36 @@ class SoundTrack extends React.Component<Props> {
       getCanvas,
       duration,
       state: {
-        played
+        played,
+        selected
       }
     } = this;
     
     
     return (
       <div className={styles.root}>
+        <div
+          ref={this.getSliderIndicator}
+          className={styles.sliderIndicator}
+        >
+          {selected.toFixed(1)}s
+        </div>
         <div draggable
           onDragStart={perpareDrag(0)}
           onDrag={drag(0)}
           onDragEnd={endDrag(0)}
           ref={getDragger(0)}
           className={styles.cursor}
+          style={{
+            backgroundImage: `url(${sliderLeft})`
+          }}
         />
         <div
           ref={getCursor(0)}
           className={styles.cursor}
+          style={{
+            backgroundImage: `url(${sliderLeft})`
+          }}
         />
         <div draggable
           onDragStart={perpareDrag(1)}
@@ -72,10 +92,16 @@ class SoundTrack extends React.Component<Props> {
           onDragEnd={endDrag(1)}
           ref={getDragger(1)}
           className={styles.cursor}
+          style={{
+            backgroundImage: `url(${sliderRight})`
+          }}
         />
         <div
           ref={getCursor(1)}
           className={styles.cursor}
+          style={{
+            backgroundImage: `url(${sliderRight})`
+          }}
         />
         <div draggable
           onDragStart={perpareDrag(2)}
@@ -93,7 +119,6 @@ class SoundTrack extends React.Component<Props> {
           width={canvasWidth}
           height={canvasHeight}
         />
-        <div className={styles.process}>{(played / 1000).toFixed(1)}s</div>
       </div>
     );
   }
@@ -109,12 +134,12 @@ class SoundTrack extends React.Component<Props> {
     this.canvasCtx = canvas.getContext('2d');
     this.canvasCtx.fillStyle = 'rgb(0, 0, 0)';
     this.canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+    this.sliderIndicator.style.width = `${canvasWidth - 2 * cursorWidth}px`;
+    this.sliderIndicator.style.left = `${widthPercents}%`;
     dragger[0].style.left = cursor[0].style.left = '0%';
     dragger[1].style.left = cursor[1].style.left = `${100 - widthPercents}%`;
     dragger[2].style.left = cursor[2].style.left = '0%';
-    dragger[0].style.width = cursor[0].style.width = `${cursorWidth}px`;
-    dragger[1].style.width = cursor[1].style.width = `${cursorWidth}px`;
-    dragger[2].style.width = cursor[2].style.width = `${cursorWidth}px`;
+    dragger[2].style.width = cursor[2].style.width = '3px';
     dragger[0].style.zIndex = 3;
     dragger[1].style.zIndex = 3;
     dragger[2].style.zIndex = 3;
@@ -251,6 +276,10 @@ class SoundTrack extends React.Component<Props> {
     }
     dragger[index].style.left = `${percents}%`;
     this.cursor[index].style.left = `${percents}%`;
+    this.sliderIndicator.style.left = 
+    `${parseFloat(dragger[0].style.left) + widthPercents}%`;
+    this.sliderIndicator.style.width =
+      `${(parseFloat(dragger[1].style.left) - parseFloat(dragger[0].style.left) ) / 100 * canvasWidth - cursorWidth}px`;
   }
 
   endDrag = index => ev => {
@@ -273,6 +302,9 @@ class SoundTrack extends React.Component<Props> {
         break;
     }
     dragger[index].style.opacity = 1;
+    this.setState({
+      selected: this.audioProcessor.getAudioBuffer().duration * ((parseFloat(dragger[1].style.left) - parseFloat(dragger[0].style.left)) / 100)
+    })
   }
 
   clip = () => {

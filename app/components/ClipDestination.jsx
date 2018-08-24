@@ -3,10 +3,8 @@ import * as React from 'react';
 import { remote } from 'electron';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import btnChange from 'images/btnChange.png';
 import fileManager from 'service/fileManager';
 import styles from './ClipDestination.less';
 
@@ -24,7 +22,6 @@ class ClipDestination extends React.Component<Props> {
 
     return (
       <div className={styles.root}>
-        <FontAwesomeIcon icon={faFolder} size='lg' />
         <Typography>存储路径:</Typography>
         <section>
           <TextField
@@ -33,13 +30,11 @@ class ClipDestination extends React.Component<Props> {
             value={fileManager.musicDir}
           />
         </section>
-        <Button
-          color='primary'
-          variant='contained'
+        <img
+          className='button'
+          src={btnChange}
           onClick={handleClick}
-        >
-          更改
-        </Button>
+        />
       </div>
     );
   }

@@ -7,7 +7,10 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import GetClipNameDialog from 'components/GetClipNameDialog';
 import SoundTrack, { canvasWidth, canvasHeight } from 'components/SoundTrack';
-import emptyTrack from './emptyTrack.jpg';
+import emptyTrack from 'images/emptyTrack.png';
+import icon from 'images/ico-1.png';
+import buttonAdd from 'images/btnAdd.png';
+import buttonDelete from 'images/btnDelete.png';
 import styles from './SoundTrackManager.less';
 
 type Props = {};
@@ -45,15 +48,45 @@ class SoundTrackManager extends React.Component<Props> {
               src={emptyTrack}
               width={canvasWidth}
               height={canvasHeight}
+              style={{
+                marginBottom: '22px',
+              }}
             />
-            <Button
-              variant='fab'
-              color='primary'
-              onClick={getAudioSrc}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+              }}
             >
-              <FontAwesomeIcon icon={faPlus} />
-            </Button>
+              <img
+                src={buttonAdd}
+                onClick={getAudioSrc}
+                className="button"
+              />
+              <span
+                style={{
+                  size: '22pt',
+                  color: 'rgb(237, 56, 81)'
+                }}
+              >
+                添加音乐
+              </span>
+            </div>
           </section>
+          <div
+            style={{
+              width: canvasWidth,
+              borderTop: 'solid 1px lightgrey',
+              paddingTop: '5px'
+            }}
+          >
+            <img src={icon} />
+            <span style={{ fontSize: '22px', color: 'rgb(117, 121, 145)'}}>
+              点击右侧“+”，添加一条本地音乐进行剪切
+            </span>
+          </div>
         </div>
       )
     }
@@ -66,16 +99,18 @@ class SoundTrackManager extends React.Component<Props> {
             audioSrc={audioSrc}
             ref={ref => this.soundTrack = ref}
           />
-          <Button
-            variant='fab'
-            color='secondary'
-            onClick={clearAudioSrc}
-          >
-            <FontAwesomeIcon icon={faTrashAlt} />
-          </Button>
+          <img
+            className='button'
+            src={buttonDelete}
+            onClick={this.clearAudioSrc}
+          />
         </section>
         <section
-          style={{ width: canvasWidth }}
+          style={{
+            width: canvasWidth,
+            borderTop: 'solid 1px lightgrey',
+            paddingTop: '5px'
+          }}
         >
           <Button
             variant='contained'

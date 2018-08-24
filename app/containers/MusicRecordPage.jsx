@@ -44,6 +44,7 @@ class Page extends React.Component<Props> {
       this.dialog.open();
     } catch (e) {
       alert('剪切缓冲数不足2，无法合成，请先进行剪切');
+      throw e;
     }
   }
   

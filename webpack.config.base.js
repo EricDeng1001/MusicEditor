@@ -48,7 +48,12 @@ export default {
       },
       {
         test: /\.worker\.js$/,
-        use: 'worker-loader'
+        use: {
+          loader: 'worker-loader',
+          options: {
+            inline: true
+          }
+        }
       }
     ]
   },

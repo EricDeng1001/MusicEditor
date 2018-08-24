@@ -14,7 +14,7 @@ type Props = {};
 class RecordTrack extends React.Component<Props> {
   props: Props;
   state = {
-    record: null,
+    record: '',
     start: null,
   }
   async componentDidMount() {
@@ -39,9 +39,9 @@ class RecordTrack extends React.Component<Props> {
       return (
         <div>
           <SoundTrackManager
-            ref={ref => this.audioProcessor = ref.audioProcessor}
+            ref={ref => this.soundTrack = ref ? ref.soundTrack : null}
             audioSrc={this.state.record}
-            onClear={() => this.setState({ record: null, start: false })}
+            onClear={() => this.setState({ record: '', start: false })}
           />
         </div>
       )
@@ -146,15 +146,20 @@ class RecordTrack extends React.Component<Props> {
     delete this.microphoneProcessor;
   }
   
-  handleSaveRecord = async () => {
+  handleSaveRecord = () => {
     this.microphoneProcessor.stop();
-    this.setState({
-      record: await this.microphoneProcessor.getURL()
-    })
+    this.microphoneProcessor.getURL().then(url => 
+      this.setState({
+        record: url
+      })
+    );
   }
   
   draw = () => {
     const analyser = this.microphoneProcessor.analyser;
+    if (!this.canvas) {
+      return;
+    }
     const canvasCtx = this.canvas.getContext('2d');
     var bufferLength = analyser.frequencyBinCount;
     var dataArray = new Uint8Array(bufferLength);

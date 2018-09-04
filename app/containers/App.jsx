@@ -15,6 +15,7 @@ import btn3_1 from 'images/btn3-1.png';
 import btn3_2 from 'images/btn3-2.png';
 import btn4_1 from 'images/btn4-1.png';
 import btn4_2 from 'images/btn4-2.png';
+import logo from 'images/logo.png';
 import styles from './App.less';
 
 type Props = {
@@ -77,6 +78,7 @@ class App extends React.Component<Props> {
           <img
             width="250px"
             height="178px"
+            src={logo}
             alt="logo"
           />
           <List component='nav'>

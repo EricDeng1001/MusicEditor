@@ -1,6 +1,6 @@
 {
-  "name": "productionName",
-  "productName": "productionName",
+  "name": "MusicEditor",
+  "productName": "x",
   "version": "1.0.0",
   "description": "delevoped by Eric Deng",
   "scripts": {
@@ -41,8 +41,8 @@
     ]
   },
   "build": {
-    "productName": "productionName",
-    "appId": "me.antinus.home.prod",
+    "productName": "唱吧声卡特效大师",
+    "appId": "me.antinux.home.prod",
     "files": [
       "dist/",
       "node_modules/",
@@ -68,7 +68,8 @@
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "icon": "resources/256x256.ico"
     },
     "linux": {
       "target": [

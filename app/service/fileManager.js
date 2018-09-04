@@ -43,7 +43,7 @@ const fileManager = {
     ).map(file => file.slice(0, file.lastIndexOf('.')));
     fs.writeFileSync(
       path.resolve(drive, '_list.txt'),
-      names.map((name, index) => `${index + 1},0,${name},C:\\\\${index + 1}.mp3\r\n`).join(''),
+      names.map((name, index) => `${index + 1},0,${name},C:\\${index + 1}.mp3\r\n`).join(''),
       { flag: 'w+' }
     );
   },
@@ -62,7 +62,7 @@ const fileManager = {
     ).map(file => file.slice(0, file.lastIndexOf('.')));
     fs.writeFileSync(
       path.resolve(drive, '_list.txt'),
-      names.map((name, index) => `${index + 1},0,${name},C:\\\\${index + 1}.mp3\r\n`).join(''),
+      names.map((name, index) => `${index + 1},0,${name},C:\\${index + 1}.mp3\r\n`).join(''),
       { flag: 'w+' }
     );
   },

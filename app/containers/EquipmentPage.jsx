@@ -32,7 +32,7 @@ class Page extends React.Component {
             left: '316px'
           }}>
             <img
-              src={update}
+              // src={update}
             />
           </div>
           <img

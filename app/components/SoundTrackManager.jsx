@@ -177,10 +177,6 @@ class SoundTrackManager extends React.Component<Props> {
 
   handleSaveClip = clipName => {
     this.soundTrack.saveClip(clipName);
-    remote.dialog.showMessageBox({
-      title: '成功',
-      message: `已保存到文件:${clipName}.wav`
-    });
   }
 
 }

@@ -96,7 +96,7 @@ class AudioProcessor {
     this._bufferSource.loopEnd = end / 1000;
     const played = this.getPlayedOffset();
     if (played > end) {
-      await this.jumpTo(start);
+      await this.jumpTo(this._bufferSource.loopStart);
     }
   }
   
@@ -125,9 +125,9 @@ class AudioProcessor {
     const timeSpan = (end - start) / 1000;
     const frameCount = buffer.sampleRate * timeSpan;
     const startFrame = parseInt(loopStart * buffer.sampleRate);
-    const newClip = _audioCtx.createBuffer(2, frameCount, buffer.sampleRate);
+    const newClip = _audioCtx.createBuffer(1, frameCount, buffer.sampleRate);
 
-    for (let channel = 0; channel < 2; channel++) {
+    for (let channel = 0; channel < 1; channel++) {
       let channelData = buffer.getChannelData(channel);
       let newClipData = newClip.getChannelData(channel);
       for (let i = 0; i < frameCount; i++) {
@@ -147,9 +147,9 @@ class AudioProcessor {
     } = this;
     const timeSpan = Math.max(thisBuffer.duration, audioBuffer.duration);
     const frameCount = timeSpan * thisBuffer.sampleRate;
-    const newClip = _audioCtx.createBuffer(2, frameCount, thisBuffer.sampleRate);
+    const newClip = _audioCtx.createBuffer(1, frameCount, thisBuffer.sampleRate);
     
-    for (let channel = 0; channel < 2; channel++) {
+    for (let channel = 0; channel < 1; channel++) {
       let thisBufferData = thisBuffer.getChannelData(channel);
       let anotherData = audioBuffer.getChannelData(channel);
       let newClipData = newClip.getChannelData(channel);

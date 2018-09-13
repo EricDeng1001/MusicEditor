@@ -1,11 +1,15 @@
 // @flow
 import Recorder from 'utils/recorder';
+import register from 'utils/register';
 
 class MicrophoneProcessor {
   constructor(audioCtx) {
     this.audioCtx = audioCtx;
     this.analyser = audioCtx.createAnalyser();
-    this.analyser.connect(audioCtx.destination);
+    this.gainNode = audioCtx.createGain();
+    this.analyser.connect(this.gainNode);
+    this.gainNode.connect(audioCtx.destination);
+    register(() => this.gainNode.gain.value = 0);
   }
   
   async start() {

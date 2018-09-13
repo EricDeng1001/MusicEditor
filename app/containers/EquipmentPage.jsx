@@ -49,11 +49,16 @@ class Page extends React.Component {
           top: '64px',
           left: '316px'
         }}>
+        {
+          /*
           <img
             className='button'
             src={update}
             onClick={() => fileManager.updateCard()}
+          
           />
+          */
+        }
         </div>
         <div style={{
           display: 'grid',

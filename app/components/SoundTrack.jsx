@@ -167,7 +167,7 @@ class SoundTrack extends React.Component<Props> {
     canvasCtx.beginPath();
 
     let leftChannel = buffer.getChannelData(0);
-    let rightChannel = buffer.getChannelData(1);
+    let rightChannel = []; //buffer.getChannelData(1);
 
     const drawRate = 1; // 每秒画几秒的音轨
     const framePerSecond = drawRate * buffer.sampleRate;
@@ -176,7 +176,7 @@ class SoundTrack extends React.Component<Props> {
     drawTime = Math.min(drawTime, 8); // 至少120 fps
     for (let i = 0; i < canvasWidth; i++) {
       const sampleFrame = parseInt(framePerPx * i);
-      let mixed = (leftChannel[sampleFrame] + rightChannel[sampleFrame]) / 2;
+      let mixed = (leftChannel[sampleFrame] + rightChannel[sampleFrame] || leftChannel[sampleFrame]) / 2;
       // from -1 to 1
       let y = (mixed + 1) * canvasHeight / 2;
       if (i == 0) {

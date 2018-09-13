@@ -62,7 +62,7 @@ app.on('ready', async () => {
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
   ) {
-    await installExtensions();
+    installExtensions();
   }
 
   mainWindow = new BrowserWindow({
